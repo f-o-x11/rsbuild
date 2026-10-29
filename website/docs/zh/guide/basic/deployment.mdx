@@ -113,6 +113,26 @@ Cloudflare Workers 属于运行时部署目标，而不是静态托管。对于�
 
 如果需要手动配置 Worker 打包，请参考 [output.target - Cloudflare Workers](/config/output/target#cloudflare-workers)。
 
+### deed.page
+
+[deed.page](https://deed.page) 是一个无需注册账号的静态托管服务，只需一次 HTTP 请求即可上传构建产物。
+
+#### 如何部署
+
+执行构建后，将 `dist` 目录中的内容打包并上传：
+
+```bash
+npm run build
+tar -C dist -czf site.tar.gz .
+curl -T site.tar.gz "https://deed.page/v1/sites?slug=my-rsbuild-app"
+```
+
+请将 `my-rsbuild-app` 替换为唯一的 slug。返回的 JSON 中包含站点地址（例如 `https://my-rsbuild-app.deed.page/`）和一个只会显示一次的 `token`。请妥善保管该 token，之后向同一个 slug 上传新的构建产物时，将其放在 `Authorization: Bearer` 请求头中发送。
+
+站点部署在子域名的根路径下，因此默认的 [output.assetPrefix](/config/output/asset-prefix) 无需修改即可使用。
+
+单次上传的大小上限为 4 MB，更大的项目可以使用 manifest 方式上传，详见 [deed.page 文档](https://deed.page/docs)。
+
 ### GitHub Pages
 
 [GitHub Pages](https://pages.github.com/) 是一个静态站点托管服务，可以直接从 GitHub 上的存储库获取 HTML、CSS 和 JavaScript 文件。

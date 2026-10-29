@@ -113,6 +113,26 @@ Cloudflare Workers is a runtime deployment target rather than static hosting. Fo
 
 To configure Worker bundling manually, see [output.target - Cloudflare Workers](/config/output/target#cloudflare-workers).
 
+### deed.page
+
+[deed.page](https://deed.page) is a static hosting service that does not require an account. You upload the build output with a single HTTP request.
+
+#### How to deploy
+
+Build the project, then pack the contents of the `dist` directory and upload the archive:
+
+```bash
+npm run build
+tar -C dist -czf site.tar.gz .
+curl -T site.tar.gz "https://deed.page/v1/sites?slug=my-rsbuild-app"
+```
+
+Replace `my-rsbuild-app` with a unique slug. The JSON response contains the site URL, such as `https://my-rsbuild-app.deed.page/`, and a `token` that is only shown once. Keep the token private, and send it in an `Authorization: Bearer` header when you upload a new build to the same slug.
+
+The site is served from the root of its subdomain, so the default [output.assetPrefix](/config/output/asset-prefix) works without changes.
+
+A single upload is limited to 4 MB. For larger builds, use the manifest upload described in the [deed.page documentation](https://deed.page/docs).
+
 ### GitHub pages
 
 [GitHub Pages](https://pages.github.com/) is a static site hosting service that takes HTML, CSS, and JavaScript files straight from a repository on GitHub.
